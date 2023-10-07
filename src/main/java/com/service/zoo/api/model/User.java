@@ -1,13 +1,33 @@
 package com.service.zoo.api.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class User {
-    private long id;
+    public enum Access{ADMIN,USER}
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String name;
     private String surname;
     private String login;
     private String password;
+    private Access access;
 
-    public long getId() {
+    public User(Long id, String name, String surname, String login, String password, Access access){
+        this.id = id;
+        this.name=name;
+        this.surname = surname;
+        this.login=login;
+        this.password=password;
+        this.access = access;
+    }
+
+    public Long getId() {
         return id;
     }
 
@@ -45,5 +65,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Access getAccess() {
+        return access;
+    }
+
+    public void setAccess(Access access) {
+        this.access = access;
     }
 }
