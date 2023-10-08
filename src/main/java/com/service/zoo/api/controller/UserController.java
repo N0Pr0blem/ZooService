@@ -1,7 +1,9 @@
 package com.service.zoo.api.controller;
 
+import com.service.zoo.api.exception.AuthorizationInvalidPasswordException;
 import com.service.zoo.api.exception.UserAlreadyExistException;
 import com.service.zoo.api.exception.UserNotFoundException;
+import com.service.zoo.api.Entity.UserEntity;
 import com.service.zoo.api.model.User;
 import com.service.zoo.sevice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,9 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    public ResponseEntity registration(@RequestBody User user) {
+    public ResponseEntity registration(@RequestBody UserEntity userEntity) {
         try {
-            userService.registration(user);
+            userService.registration(userEntity);
             return ResponseEntity.ok("Регистрация прошла успешно");
         } catch (UserAlreadyExistException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
@@ -28,8 +30,8 @@ public class UserController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity getOneUser(@RequestParam Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity getOneUser(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(userService.getUserById(id));
         } catch (UserNotFoundException exception) {
@@ -47,5 +49,23 @@ public class UserController {
         catch (Exception exception) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
+    }
+
+    @GetMapping("/logg-in")
+    public ResponseEntity authorization(@RequestBody User user){
+        try {
+            return ResponseEntity.ok(userService.atthorization(user));
+        }
+        catch (AuthorizationInvalidPasswordException exception) {
+            return ResponseEntity.badRequest().body(exception.getMessage());
+        }
+        catch (Exception exception) {
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 }
