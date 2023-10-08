@@ -5,7 +5,6 @@ import com.service.zoo.api.exception.UserNotFoundException;
 import com.service.zoo.api.model.User;
 import com.service.zoo.api.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,5 +24,10 @@ public class UserService {
             throw new UserNotFoundException("Пользователя не существует");
         }
         return findUser;
+    }
+
+    public Long deleteUserById(Long id) {
+        userRepository.deleteById(id);
+        return id;
     }
 }
